@@ -912,8 +912,11 @@ dependencies = [
 [package.optional-dependencies]
 dev = [
     { name = "datasets" },
+    { name = "pillow" },
     { name = "pytest" },
+    { name = "tensorflow" },
     { name = "torch" },
+    { name = "torchvision" },
 ]
 hf = [
     { name = "datasets" },
@@ -932,7 +935,7 @@ vision = [
 
 [package.metadata]
 requires-dist = [
-    { name = "datasets", marker = "extra == 'dev'" },
+    { name = "datasets", marker = "extra == 'dev'", specifier = ">=2.14" },
     { name = "datasets", marker = "extra == 'hf'", specifier = ">=2.14" },
     { name = "matplotlib", specifier = ">=3.7.0" },
     { name = "mcp", specifier = ">=1.0.0" },
@@ -941,16 +944,19 @@ requires-dist = [
     { name = "ollama", marker = "extra == 'vision'", specifier = ">=0.3.0" },
     { name = "opencv-python-headless", specifier = ">=4.8,<4.11" },
     { name = "pillow", specifier = ">=10.0,<11" },
+    { name = "pillow", marker = "extra == 'dev'", specifier = ">=10.0" },
     { name = "pillow", marker = "extra == 'hf'", specifier = ">=10.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0" },
     { name = "scikit-image", specifier = ">=0.22,<0.25" },
     { name = "scipy", specifier = ">=1.11,<1.15" },
+    { name = "tensorflow", marker = "extra == 'dev'", specifier = ">=2.13" },
     { name = "tensorflow", marker = "extra == 'tensorflow'", specifier = ">=2.13" },
-    { name = "torch", marker = "extra == 'dev'" },
+    { name = "torch", marker = "extra == 'dev'", specifier = ">=2.0" },
     { name = "torch", marker = "extra == 'torch'", specifier = ">=2.0" },
+    { name = "torchvision", marker = "extra == 'dev'", specifier = ">=0.15" },
     { name = "torchvision", marker = "extra == 'torch'", specifier = ">=0.15" },
 ]
-provides-extras = ["torch", "tensorflow", "hf", "dev", "vision"]
+provides-extras = ["torch", "hf", "tensorflow", "dev", "vision"]
 
 [[package]]
 name = "exceptiongroup"

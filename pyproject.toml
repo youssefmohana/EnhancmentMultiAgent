@@ -19,10 +19,13 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+# Production integrators
 torch = ["torch>=2.0", "torchvision>=0.15"]
-tensorflow = ["tensorflow>=2.13"]
+# Integrators under dev - Hugging Face & TensorFlow (experimental)
 hf = ["datasets>=2.14", "pillow>=10.0"]
-dev = ["pytest>=8.0", "datasets", "torch"]
+tensorflow = ["tensorflow>=2.13"]
+# Dev bundle includes all integrators (huggingface + tensorflow) for development
+dev = ["pytest>=8.0", "datasets>=2.14", "tensorflow>=2.13", "torch>=2.0", "torchvision>=0.15", "pillow>=10.0"]
 vision = ["ollama>=0.3.0"]
 
 [project.urls]

@@ -41,9 +41,11 @@ What's on the roadmap:
 
 📊 Built-in benchmarking & reporting
 
-🔌 Native hooks for PyTorch, TensorFlow & Hugging Face
+🔌 Native hooks for PyTorch, TensorFlow & Hugging Face — make integrator like huggingface and tensorflow under dev 🚧
 
 🧠 Vision LLM as the central quality oracle
+
+> **Note:** PyTorch integration is stable. Hugging Face (`datasets`) and TensorFlow integrators are under **dev** — install with `pip install -e ".[dev]"` or `uv sync --extra dev` to try them. See `src/enhancement_multiagent/integrations/` for experimental hooks.
 
 I'm actively building this out and would love to connect with people working on:
 
