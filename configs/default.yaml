@@ -1,0 +1,37 @@
+# Default config for Enhancement MultiAgent
+pipeline:
+  output_dir: "restored"
+  quality_mode: "all"  # all | classical | perceptual | vision
+  max_augmentations: 4
+
+planner:
+  strategy_library: "auto"  # auto selects from weakness analyzer
+  weakness_threshold: 0.75
+
+quality:
+  classical:
+    min_psnr: 20.0
+    min_ssim: 0.6
+  perceptual:
+    threshold: 0.5
+  vision_llm:
+    model: "llava"  # llava | llama3.2-vision | auto-detect
+    threshold: 0.6
+
+agents:
+  geometric: true
+  photometric: true
+  generative: true
+
+integrations:
+  pytorch: { enabled: true, apply_prob: 0.7 }
+  huggingface: { enabled: false, note: "under dev - use .[dev]" }
+  tensorflow: { enabled: false, note: "under dev - use .[dev]" }
+
+mcp:
+  server: "enhancement_multiagent.mcp.server"
+  transport: "stdio"
+
+benchmark:
+  dataset: "benchmark"
+  reports_dir: "reports"
