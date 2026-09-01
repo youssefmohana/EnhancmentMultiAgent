@@ -75,8 +75,38 @@ graph LR
 | 📊 Built-in benchmarking & reporting | `benchmarking/` | ✅ Live |
 | 🔌 Native hooks for **PyTorch**, **TensorFlow** & **Hugging Face** — make integrator like huggingface and tensorflow under dev 🚧 | `integrations/` | ✅ PyTorch · 🚧 HF/TF dev |
 | 🧠 Vision LLM as the central quality oracle | `quality/vision_llm.py` | 🚀 In Progress |
+| 🧪 **Albumentations Integration** | `integrations/albumentations.py` | 🔮 Future Work |
 
 > **Note:** PyTorch is stable (`pip install -e ".[torch]"`). Hugging Face (`datasets`) and TensorFlow are under **dev** — `pip install -e ".[dev]"` or `uv sync --extra dev`. See [docs/INTEGRATIONS.md](docs/INTEGRATIONS.md).
+
+#### 🔮 Future Work — Integrate with Albumentations
+
+> **Next up: bridge our smart planner with the industry-standard Albumentations ecosystem.**
+
+- **🔗 Albumentations Bridge** — `src/enhancement_multiagent/integrations/albumentations.py` (planned): auto-convert our `Agent` plans (`geometric`/`photometric`/`generative`) into `albumentations.Compose` pipelines, so you can keep using `A.HorizontalFlip`, `A.RandomBrightnessContrast`, `A.OpticalDistortion` with our model-aware selection & Vision LLM gates on top
+- **🎯 Smart Compose** — instead of random transforms, `AugmentationPlanner` will generate an *Albumentations Compose* tailored to your model's weaknesses (e.g., low-light → `A.RandomGamma` + `A.CLAHE`), validated by our `QualityOrchestrator` before training
+- **⚡ Zero-Friction Drop-In** — `AlbumentationsAugmenter(plan).get_compose()` → plug directly into PyTorch `Dataset` / Hugging Face `Dataset.map` without rewriting existing `A.Compose` code
+- **📊 Benchmark Parity** — compare our agents vs Albumentations ops under same PSNR/SSIM/diversity + Vision LLM realism metrics in `benchmarking/`
+- **Install (future):** `pip install -e ".[albumentations]"` or `uv sync --extra albumentations` → brings `albumentations>=1.4` + `augmentations` extras
+
+```python
+# 🔮 Future API (planned) — Albumentations + Smart Planner
+from enhancement_multiagent.planner.augmentation_planner import AugmentationPlanner
+from enhancement_multiagent.integrations.albumentations import AlbumentationsAugmenter  # future
+
+planner = AugmentationPlanner()
+plan = planner.plan_from_hint("low_light")  # model-aware
+
+# Convert our plan → Albumentations Compose with quality gate
+augmenter = AlbumentationsAugmenter(plan, quality_mode="vision")
+compose = augmenter.get_compose()  # albumentations.Compose
+augmented = compose(image=image)["image"]  # drop-in
+
+# Or wrap existing Compose for validation
+# augmenter.validate_with_vision_llm("orig.jpg", "aug.jpg")
+```
+
+> **Status:** 🔮 *Future Work* — not yet in `main`, tracking in `docs/INTEGRATIONS.md` roadmap. Want to co-build? Open an issue / DM — looking for Albumentations power users!
 
 ---
 

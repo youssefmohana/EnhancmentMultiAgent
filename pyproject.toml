@@ -24,6 +24,8 @@ torch = ["torch>=2.0", "torchvision>=0.15"]
 # Integrators under dev - Hugging Face & TensorFlow (experimental)
 hf = ["datasets>=2.14", "pillow>=10.0"]
 tensorflow = ["tensorflow>=2.13"]
+# Future integrator - Albumentations bridge (planned)
+albumentations = ["albumentations>=1.4", "opencv-python-headless>=4.8"]
 # Dev bundle includes all integrators (huggingface + tensorflow) for development
 dev = ["pytest>=8.0", "datasets>=2.14", "tensorflow>=2.13", "torch>=2.0", "torchvision>=0.15", "pillow>=10.0"]
 vision = ["ollama>=0.3.0"]
