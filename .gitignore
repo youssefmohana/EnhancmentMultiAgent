@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+.env
+*.egg-info/
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+
+# Project specific
+outputs/
+temp/
+*.tmp
+.opencode/
+
+# Secrets - NEVER commit tokens
+*.token
+.secrets

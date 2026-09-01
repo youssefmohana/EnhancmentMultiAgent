@@ -1,0 +1,19 @@
+[project]
+name = "enhancement-multiagent"
+version = "0.1.0"
+description = "Multi-agent image enhancement and restoration pipeline with dataset evaluation"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.26,<2.3",
+    "opencv-python-headless>=4.8,<4.11",
+    "pillow>=10.0,<11",
+    "scikit-image>=0.22,<0.25",
+    "scipy>=1.11,<1.15",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.uv]
+package = false
