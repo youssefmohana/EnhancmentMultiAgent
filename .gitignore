@@ -19,8 +19,13 @@ Thumbs.db
 # Project specific
 outputs/
 temp/
+tmp/
 *.tmp
 .opencode/
+restored/
+reports/
+benchmark/
+demo_images/
 
 # Secrets - NEVER commit tokens
 *.token

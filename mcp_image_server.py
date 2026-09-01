@@ -204,5 +204,115 @@ def save_image(input_path: str, output_path: str) -> str:
         return f"Error: {e}"
 
 
+@mcp.tool()
+def flip_image(input_path: str, output_path: str, direction: str = "horizontal") -> str:
+    """Geometric: flip image horizontally/vertically/both (augmentation)."""
+    try:
+        img = cv2.imread(input_path)
+        if img is None: return f"Error: Could not load {input_path}"
+        code = 1 if direction == "horizontal" else 0 if direction == "vertical" else -1
+        result = cv2.flip(img, code)
+        cv2.imwrite(output_path, result)
+        return f"Flipped ({direction}) → {output_path}"
+    except Exception as e:
+        return f"Error: {e}"
+
+
+@mcp.tool()
+def rotate_image(input_path: str, output_path: str, angle: float = 15) -> str:
+    """Geometric: rotate image (augmentation for rotation invariance)."""
+    try:
+        img = cv2.imread(input_path)
+        if img is None: return f"Error: Could not load {input_path}"
+        h, w = img.shape[:2]
+        M = cv2.getRotationMatrix2D((w//2, h//2), angle, 1.0)
+        result = cv2.warpAffine(img, M, (w, h), borderMode=cv2.BORDER_REFLECT_101)
+        cv2.imwrite(output_path, result)
+        return f"Rotated {angle}° → {output_path}"
+    except Exception as e:
+        return f"Error: {e}"
+
+
+@mcp.tool()
+def add_noise(input_path: str, output_path: str, sigma: float = 20) -> str:
+    """Photometric: add Gaussian noise (sensor robustness augmentation)."""
+    try:
+        img = cv2.imread(input_path)
+        if img is None: return f"Error: Could not load {input_path}"
+        noise = np.random.normal(0, sigma, img.shape)
+        result = np.clip(img.astype(np.float32) + noise, 0, 255).astype(np.uint8)
+        cv2.imwrite(output_path, result)
+        return f"Noise added (σ={sigma}) → {output_path}"
+    except Exception as e:
+        return f"Error: {e}"
+
+
+@mcp.tool()
+def color_jitter(input_path: str, output_path: str, hue_shift: int = 5, saturation_scale: float = 1.2) -> str:
+    """Photometric: color jitter augmentation."""
+    try:
+        img = cv2.imread(input_path)
+        if img is None: return f"Error: Could not load {input_path}"
+        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV).astype(np.float32)
+        hsv[:,:,0] = (hsv[:,:,0] + hue_shift) % 180
+        hsv[:,:,1] = np.clip(hsv[:,:,1]*saturation_scale, 0, 255)
+        result = cv2.cvtColor(hsv.astype(np.uint8), cv2.COLOR_HSV2BGR)
+        cv2.imwrite(output_path, result)
+        return f"Color jitter → {output_path}"
+    except Exception as e:
+        return f"Error: {e}"
+
+
+@mcp.tool()
+def synthetic_occlusion(input_path: str, output_path: str, count: int = 2) -> str:
+    """Generative: add synthetic occlusion (black rectangles) for robustness."""
+    try:
+        img = cv2.imread(input_path)
+        if img is None: return f"Error: Could not load {input_path}"
+        h, w = img.shape[:2]
+        result = img.copy()
+        for _ in range(count):
+            x = np.random.randint(0, w-20)
+            y = np.random.randint(0, h-20)
+            rw = np.random.randint(20, w//4)
+            rh = np.random.randint(20, h//4)
+            cv2.rectangle(result, (x,y), (x+rw, y+rh), (0,0,0), -1)
+        cv2.imwrite(output_path, result)
+        return f"Synthetic occlusion ({count}) → {output_path}"
+    except Exception as e:
+        return f"Error: {e}"
+
+
+@mcp.tool()
+def validate_augmentation(original_path: str, augmented_path: str, gate: str = "all") -> str:
+    """Quality gate: validate if augmentation is good data (classical + perceptual + Vision LLM)."""
+    try:
+        import sys
+        sys.path.insert(0, "src")
+        from enhancement_multiagent.quality.vision_llm import QualityOrchestrator
+        q = QualityOrchestrator()
+        result = q.validate(original_path, augmented_path, mode=gate)
+        return json.dumps(result, indent=2)
+    except Exception as e:
+        return json.dumps({"error": str(e)})
+
+
+@mcp.tool()
+def plan_augmentation(weakness: str, image_folder: str = "") -> str:
+    """Planner: generate model-aware augmentation plan for a weakness (e.g., 'low_light')."""
+    try:
+        import sys
+        sys.path.insert(0, "src")
+        from enhancement_multiagent.planner.augmentation_planner import AugmentationPlanner
+        planner = AugmentationPlanner()
+        if image_folder and os.path.isdir(image_folder):
+            plan = planner.plan_from_dataset(image_folder)
+        else:
+            plan = planner.plan_from_hint(weakness)
+        return json.dumps({"weakness": weakness, "plan": plan}, indent=2)
+    except Exception as e:
+        return json.dumps({"error": str(e)})
+
+
 if __name__ == "__main__":
     mcp.run(transport="stdio")

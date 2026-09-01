@@ -1,19 +1,39 @@
 [project]
 name = "enhancement-multiagent"
-version = "0.1.0"
-description = "Multi-agent image enhancement and restoration pipeline with dataset evaluation"
+version = "0.2.0"
+description = "Smart Data Augmentation: Multi-Agent Orchestration with Vision LLM Quality Gates - model-aware augmentation planning"
 readme = "README.md"
 requires-python = ">=3.10"
+license = {text = "MIT"}
+keywords = ["computer-vision", "data-augmentation", "multi-agent", "vision-llm", "machine-learning"]
+authors = [{name="youssefmohana"}]
 dependencies = [
     "numpy>=1.26,<2.3",
     "opencv-python-headless>=4.8,<4.11",
     "pillow>=10.0,<11",
     "scikit-image>=0.22,<0.25",
     "scipy>=1.11,<1.15",
+    "mcp>=1.0.0",
+    "ollama>=0.3.0",
+    "matplotlib>=3.7.0",
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0"]
+torch = ["torch>=2.0", "torchvision>=0.15"]
+tensorflow = ["tensorflow>=2.13"]
+hf = ["datasets>=2.14", "pillow>=10.0"]
+dev = ["pytest>=8.0", "datasets", "torch"]
+vision = ["ollama>=0.3.0"]
+
+[project.urls]
+Repository = "https://github.com/youssefmohana/EnhancmentMultiAgent"
 
 [tool.uv]
 package = false
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
